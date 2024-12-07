@@ -2,18 +2,34 @@ const express = require("express");
 const path = require("path");
 const router = express.Router();
 const fs = require("fs");
-const jwt = require("jsonwebtoken");
-const sendMail = require("../utils/sendMail");
 const Shop = require("../model/shop");
 const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
-const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
-
+const multer = require("multer")
 const sendShopToken = require("../utils/shopToken");
 
-// Create Shop route (no email activation)
-router.post("/create-shop", async (req, res, next) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/users'); // Directory to store uploaded images
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Unique file name
+  },
+});
+
+// Filter to accept only images
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
+
+// Multer middleware
+const upload = multer({ storage, fileFilter });
+router.post("/create-shop",upload.single('profileImage'), async (req, res, next) => {
   try {
     const { email } = req.body;
     const sellerEmail = await Shop.findOne({ email });
@@ -21,7 +37,10 @@ router.post("/create-shop", async (req, res, next) => {
     if (sellerEmail) {
       return next(new ErrorHandler("User already exists", 400));
     }
-
+    let avatar = null;
+    if (req.file) {
+      avatar = req.file.path.replace(/\\/g, "/");   // Path to the uploaded image
+    }
     // Create shop without activation
     const seller = {
       name: req.body.name,
@@ -30,6 +49,7 @@ router.post("/create-shop", async (req, res, next) => {
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
       zipCode: req.body.zipCode,
+      avatar: avatar,
     };
 
     // Save the new shop directly to the database
@@ -44,7 +64,6 @@ router.post("/create-shop", async (req, res, next) => {
   }
 });
 
-// Removed activation-related methods
 
 
 // login shop

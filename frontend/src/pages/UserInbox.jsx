@@ -201,6 +201,8 @@ const UserInbox = () => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
   }, [messages]);
+//   console.log(user);
+// console.log(conversations);
 
   return (
     <div className="w-full">
@@ -294,9 +296,10 @@ const MessageList = ({
         setActiveStatus(online)
       }
     >
+      
       <div className="relative">
         <img
-          src={`${backend_url}${userData?.avatar}`}
+          src={`${backend_url}${user?.avatar}`}
           alt=""
           className="w-[50px] h-[50px] rounded-full"
         />
