@@ -31,6 +31,7 @@ const ProfileContent = ({ active }) => {
     const [avatar, setAvatar] = useState(null);
 
     const dispatch = useDispatch();
+console.log(user);
 
     useEffect(() => {
         if (error) {
@@ -52,7 +53,7 @@ const ProfileContent = ({ active }) => {
     const handleImage = async (e) => {
         const file = e.target.files[0];
         setAvatar(file);
-
+   
         const formData = new FormData();
         formData.append("image", file);
 
@@ -63,16 +64,16 @@ const ProfileContent = ({ active }) => {
                 },
                 withCredentials: true,
             })
-            .then(() => {
+            .then(() => {   
                 dispatch(loadUser());
-                toast.success("Avatar updated successfully!");
+                toast.success("Avatarzupdated successfully!");
             })
             .catch((error) => {
                 toast.error(error.message);
             });
     };
 
-    return (
+    return (    
         <div className="w-full">
             {/* Profile */}
             {active === 1 && (
@@ -86,7 +87,7 @@ const ProfileContent = ({ active }) => {
                             />
                             <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
                                 <input
-                                    type="file"
+                                      type="file"
                                     id="image"
                                     className="hidden"
                                     onChange={handleImage}
@@ -99,7 +100,6 @@ const ProfileContent = ({ active }) => {
                     </div>
                     <br />
                     <br />
-
                     <div className="w-full px-5">
                         <form onSubmit={handleSubmit} aria-required={true}>
                             <div className="w-full 800px:flex block pb-3">
@@ -159,7 +159,7 @@ const ProfileContent = ({ active }) => {
                     </div>
                 </>
             )}
-
+    
             {/* Orders */}
             {active === 2 && <AllOrders />}
 

@@ -26,18 +26,20 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+    
+        if (!avatar) {
+            toast.error("Please upload an avatar!");
+            return;
+        }
+    
         const config = { headers: { "Content-Type": "multipart/form-data" } };
-        // meaning of uper line is that we are creating a new object with the name of config and the value of config is {headers:{'Content-Type':'multipart/form-data'}}  
-
         const newForm = new FormData();
-        // meaning of uper line is that we are creating a new form data object and we are sending it to the backend with the name of newForm and the value of newForm is new FormData()
-        newForm.append("file", avatar);
-        // meanin of newForm.append("file",avatar) is that we are sending a file to the backend with the name of file and the value of the file is avatar
+    
+        newForm.append("profileImage", avatar); // Match the backend's field name
         newForm.append("name", name);
         newForm.append("email", email);
-        newForm.append("password", password)
-
-
+        newForm.append("password", password);
+    
         axios
             .post(`${server}/user/create-user`, newForm, config)
             .then((res) => {
@@ -45,11 +47,13 @@ const Signup = () => {
                 setName("");
                 setEmail("");
                 setPassword("");
-                setAvatar();
-            }).catch((error) => {
-                toast.error(error.response.data.message);
+                setAvatar(null);
             })
-    }
+            .catch((error) => {
+                toast.error(error.response?.data?.message || "Unexpected error occurred.");
+            });
+    };
+    
 
     return (
         <div className='min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>

@@ -35,6 +35,7 @@ app.use(
 );
 
 app.use("/", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/test", (req, res) => {
   res.send("Hello World!");

@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const User = require("../model/user");
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const ErrorHandler = require("../utils/ErrorHandler");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -10,14 +10,14 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const multer = require('multer');
-const path = require('path');
+// const path = require('path');
 const router = express.Router();
 
 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Directory to store uploaded images
+    cb(null, 'uploads/users'); // Directory to store uploaded images
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`); // Unique file name
@@ -40,25 +40,23 @@ const upload = multer({ storage, fileFilter });
 router.post("/create-user", upload.single('profileImage'), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-
-    // Check if the user already exists
     const userEmail = await User.findOne({ email });
     if (userEmail) {
       return next(new ErrorHandler("User already exists", 400));
     }
 
     // Check if a file was uploaded
-    let profileImagePath = null;
-    if (req.file) {
-      profileImagePath = req.file.path; // Path to the uploaded image
-    }
+      let avatar = null;
+      if (req.file) {
+        avatar = req.file.path.replace(/\\/g, "/");   // Path to the uploaded image
+      }
 
     // Create the user with the profile image
     const user = {
       name,
       email,
       password,
-      avatar: profileImagePath, // Save the image path in the database
+      avatar: avatar, // Save the image path in the database
     };
 
     // Save the new user to the database
@@ -67,7 +65,7 @@ router.post("/create-user", upload.single('profileImage'), async (req, res, next
     res.status(201).json({
       success: true,
       message: "User created successfully!",
-      user: { name, email, avatar: profileImagePath }, // Return user data in response
+      user: { name, email, avatar: avatar }, // Return user data in response
     });
   } catch (err) {
     return next(new ErrorHandler(err.message, 400));
