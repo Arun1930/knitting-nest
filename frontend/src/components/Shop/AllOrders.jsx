@@ -11,6 +11,7 @@ const AllOrders = () => {
     const { orders, isLoading } = useSelector((state) => state.order);
     const { seller } = useSelector((state) => state.seller);
 
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -19,7 +20,6 @@ const AllOrders = () => {
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
         {
             field: "status",
             headerName: "Status",

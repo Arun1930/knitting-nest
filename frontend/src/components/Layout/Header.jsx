@@ -64,7 +64,7 @@ const Header = ({ activeHeading }) => {
                 src="https://shopo.quomodothemes.website/assets/images/logo.svg"
                 alt=""
               /> */}
-              <h1 className="logo-fot-style">Knitting Nest</h1>
+              <h1 className="logo-fot-style">Knitting Nest</h1> 
             </Link>
           </div>
           {/*Search box  */}
@@ -109,7 +109,8 @@ const Header = ({ activeHeading }) => {
 
           {/* Become a Seller */}
           <div className="button-dashboard">
-            <Link className="link" to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
+            {/* <Link className="link" to={`${isSeller ? "/dashboard" : "/shop-create"}`}> */}
+            <Link className="link" to={`${isSeller ? "/dashboard" : "/shop-login"}`}>
               <h1 className="text-[#fff] flex items-center for-dashbo">
                 {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
                 <IoIosArrowForward className="ml-1" />
@@ -234,11 +235,12 @@ const Header = ({ activeHeading }) => {
           </div>
           <div>
             <Link className="link" to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+              {/* <img
+                // src="https://shopo.quomodothemes.website/assets/images/logo.svg"
                 alt=""
                 className="mt-3 cursor-pointer"
-              />
+              /> */}
+              <h1 className="mobile-size-logo">Knitting Nest</h1>
             </Link>
           </div>
 
@@ -248,7 +250,7 @@ const Header = ({ activeHeading }) => {
               onClick={() => setOpenCart(true)}
             >
               <AiOutlineShoppingCart size={30} />
-              <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                 {cart && cart.length}
               </span>
             </div>
@@ -272,7 +274,7 @@ const Header = ({ activeHeading }) => {
                   onClick={() => setOpenWishlist(true) || setOpen(false)}
                 >
                   <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                  <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                  <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                     {wishlist && wishlist.length}
                   </span>
                 </div>

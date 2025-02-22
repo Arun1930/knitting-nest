@@ -1,5 +1,6 @@
 import React from "react";
 import { FiShoppingBag } from "react-icons/fi";
+import { IoPersonAdd } from "react-icons/io5";
 import { GrWorkshop } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
@@ -14,7 +15,7 @@ const AdminSideBar = ({ active }) => {
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/admin/dashboard" className="w-full flex items-center">
+        <Link className="link" to="/admin/dashboard" className="w-full flex items-center link">
           <RxDashboard
             size={30}
             color={`${active === 1 ? "crimson" : "#555"}`}
@@ -30,7 +31,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/admin-orders" className="w-full flex items-center">
+        <Link className="link" to="/admin-orders" className="w-full flex items-center link">
           <FiShoppingBag
             size={30}
             color={`${active === 2 ? "crimson" : "#555"}`}
@@ -46,7 +47,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/admin-sellers" className="w-full flex items-center">
+        <Link className="link" to="/admin-sellers" className="w-full flex items-center link">
           <GrWorkshop
             size={30}
             color={`${active === 3 ? "crimson" : "#555"}`}
@@ -62,7 +63,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/admin-users" className="w-full flex items-center">
+        <Link className="link" to="/admin-users" className="w-full flex items-center link">
           <HiOutlineUserGroup
             size={30}
             color={`${active === 4 ? "crimson" : "#555"}`}
@@ -78,7 +79,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/admin-products" className="w-full flex items-center">
+        <Link className="link" to="/admin-products" className="w-full flex items-center link">
           <BsHandbag size={30} color={`${active === 5 ? "crimson" : "#555"}`} />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
@@ -86,6 +87,19 @@ const AdminSideBar = ({ active }) => {
             }`}
           >
             All Products
+          </h5>
+        </Link>
+      </div>
+      
+      <div className="w-full flex items-center p-4">
+        <Link className="link" to="/shop-create" className="w-full flex items-center link">
+          <IoPersonAdd size={30} color={`${active === 6 ? "crimson" : "#555"}`} />
+          <h5
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+              active === 6 ? "text-[crimson]" : "text-[#555]"
+            }`}
+          >
+            Add faculity
           </h5>
         </Link>
       </div>
@@ -123,7 +137,7 @@ const AdminSideBar = ({ active }) => {
       </div> */}
 
       <div className="w-full flex items-center p-4">
-        <Link className="link" to="/profile" className="w-full flex items-center">
+        <Link className="link" to="/profile" className="w-full flex items-center link">
           <AiOutlineSetting
             size={30}
             color={`${active === 8 ? "crimson" : "#555"}`}

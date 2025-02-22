@@ -25,7 +25,6 @@ const server = app.listen(process.env.PORT, () => {
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-// Enable CORS for all routes
 
 app.use(
   cors({
@@ -34,12 +33,14 @@ app.use(
   })
 );
 
+// app.use(cors())
+
 app.use("/", express.static("uploads"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.get("/test", (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("/test", (req, res) => {
+//   res.send("Hello World!");
+// });
 
 app.use(bodyParser.urlencoded({ extended: true}));
 

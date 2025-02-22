@@ -8,6 +8,8 @@ const Shop = require("../model/shop");
 const { upload } = require("../multer");
 const ErrorHandler = require("../utils/ErrorHandler");
 const fs = require("fs");
+const User = require("../model/user");
+const { log } = require("console");
 
 // create product
 router.post(
@@ -129,30 +131,34 @@ router.put(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { user, rating, comment, productId, orderId } = req.body;
-
+      const finduser = req.body.user;
+      const { rating, comment, productId, orderId } = req.body;
+      const user = await User.findById(finduser)
+      if (!user) {
+        return next(new ErrorHandler("Shop Id is invalid!", 400));
+      }
       const product = await Product.findById(productId);
-
       const review = {
         user,
         rating,
         comment,
         productId,
       };
+       product.reviews.push(review);
 
-      const isReviewed = product.reviews.find(
-        (rev) => rev.user._id === req.user._id
-      );
+      // const isReviewed = product.reviews.find(
+      //   (rev) => rev.user._id === req.user._id
+      // );
 
-      if (isReviewed) {
-        product.reviews.forEach((rev) => {
-          if (rev.user._id === req.user._id) {
-            (rev.rating = rating), (rev.comment = comment), (rev.user = user);
-          }
-        });
-      } else {
-        product.reviews.push(review);
-      }
+      // if (isReviewed) {
+      //   product.reviews.forEach((rev) => {
+      //     if (rev.user._id === req.user._id) {
+      //       (rev.rating = rating), (rev.comment = comment), (rev.user = user);
+      //     }
+      //   });
+      // } else {
+      //   product.reviews.push(review);
+      // }
 
       let avg = 0;
 

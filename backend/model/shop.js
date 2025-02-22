@@ -29,7 +29,7 @@ const shopSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: "Seller",
+    // default: "Seller",
   },
   avatar: {
     type: String,

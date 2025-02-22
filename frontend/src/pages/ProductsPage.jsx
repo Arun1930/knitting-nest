@@ -5,7 +5,7 @@ import Header from "../components/Layout/Header";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
 import { server } from "../server";
 
-const ProductsPage = () => {
+const   ProductsPage = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedGender, setSelectedGender] = useState("");

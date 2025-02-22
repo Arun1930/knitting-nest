@@ -117,7 +117,7 @@ const UserOrderDetails = () => {
               </div>
               {!item.isReviewed && data?.status === "Delivered" ? (
                 <div
-                  className={`${styles.button} text-[#fff]`}
+                  className={`${styles.button} text-[#000]`}
                   onClick={() => setOpen(true) || setSelectedItem(item)}
                 >
                   write a review
@@ -205,7 +205,7 @@ const UserOrderDetails = () => {
               ></textarea>
             </div>
             <div
-              className={`${styles.button} text-white text-[20px] ml-3`}
+              className={`${styles.button} text-black text-[20px] ml-3`}
               onClick={rating > 1 ? combinedHandler : null}
             >
               Submit

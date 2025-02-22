@@ -163,11 +163,11 @@ const ProfileSidebar = ({ active, setActive }) => {
           >
             <MdOutlineAdminPanelSettings
               size={20}
-              color={active === 7 ? "red" : ""}
+              color={active === 10 ? "red" : ""}
             />
             <span
               className={`pl-3 ${
-                active === 8 ? "text-[red]" : ""
+                active === 10 ? "text-[red]" : ""
               } 800px:block hidden`}
             >
               Admin Dashboard
@@ -180,10 +180,10 @@ const ProfileSidebar = ({ active, setActive }) => {
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={logoutHandler}
       >
-        <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
+        <AiOutlineLogin size={20} color={active === 11 ? "red" : ""} />
         <span
           className={`pl-3 ${
-            active === 8 ? "text-[red]" : ""
+            active === 11 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
           loguot

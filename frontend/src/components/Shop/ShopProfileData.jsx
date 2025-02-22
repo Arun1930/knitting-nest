@@ -16,6 +16,8 @@ const ShopProfileData = ({ isOwner }) => {
     const { seller } = useSelector((state) => state.seller);
     const { id } = useParams();
 
+// console.log(seller);
+// console.log(products);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -27,6 +29,7 @@ const ShopProfileData = ({ isOwner }) => {
     const allReviews =
         products && products.map((product) => product.reviews).flat();
 
+console.log(allReviews);
 
     return (
         <div className="w-full">
@@ -112,7 +115,7 @@ const ShopProfileData = ({ isOwner }) => {
                         allReviews.map((item, index) => (
                             <div className="w-full flex my-4">
                                 <img
-                                    src={`${backend_url}/${item.user.avatar}`}
+                                    src={`${backend_url}${item.user.avatar}`}
                                     className="w-[50px] h-[50px] rounded-full"
                                     alt=""
                                 />

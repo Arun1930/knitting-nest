@@ -4,6 +4,7 @@ import { BsStarHalf } from "react-icons/bs";
 
 
 const Ratings = ({ rating }) => {
+    
     const stars = [];
 
     for (let i = 1; i <= 5; i++) {

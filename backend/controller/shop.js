@@ -49,6 +49,7 @@ router.post("/create-shop",upload.single('profileImage'), async (req, res, next)
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
       zipCode: req.body.zipCode,
+      role: req.body.role,
       avatar: avatar,
     };
 

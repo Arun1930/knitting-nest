@@ -13,8 +13,6 @@ const multer = require('multer');
 // const path = require('path');
 const router = express.Router();
 
-
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/users'); // Directory to store uploaded images

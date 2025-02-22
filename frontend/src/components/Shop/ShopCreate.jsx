@@ -13,6 +13,7 @@ const ShopCreate = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
+  const [role, setRole] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
@@ -33,6 +34,7 @@ const ShopCreate = () => {
     formData.append("phoneNumber", phoneNumber);
     formData.append("address", address);
     formData.append("zipCode", zipCode);
+    formData.append("role", role);
 
     try {
       const response = await axios.post(
@@ -52,9 +54,10 @@ const ShopCreate = () => {
       setPassword("");
       setAvatar(null);
       setZipCode("");
+      setRole("");
       setAddress("");
       setPhoneNumber("");
-      navigate("/shop-login");
+      // navigate("/shop-login");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Something went wrong. Try again!"
@@ -73,7 +76,7 @@ const ShopCreate = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a seller
+          Register as a designer
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
@@ -85,7 +88,7 @@ const ShopCreate = () => {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Shop Name
+                Designer Name
               </label>
               <input
                 type="text"
@@ -169,6 +172,23 @@ const ShopCreate = () => {
               />
             </div>
 
+
+            <div>
+              <label
+                htmlFor="zipCode"
+                className="block text-sm font-medium text-gray-700"
+              >
+                role
+              </label>
+              <input
+                type="text"
+                name="zipCode"
+                required
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
             {/* Password */}
             <div>
               <label
@@ -248,7 +268,7 @@ const ShopCreate = () => {
             {/* Redirect to Login */}
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Already have an account?</h4>
-              <Link to="/shop-login" className="text-blue-600 pl-2">
+              <Link to="/shop-login" className="text-blue-600 pl-2 ">
                 Sign In
               </Link>
             </div>

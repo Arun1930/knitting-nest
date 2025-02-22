@@ -14,9 +14,9 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../../redux/actions/wishlist";
-import { addTocart } from "../../redux/actions/cart";
+import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-import Ratings from "./Ratings";
+import Ratings from "./Ratings"; 
 import axios from "axios";
 
 const ProductDetails = ({ data }) => {
@@ -29,6 +29,7 @@ const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [inCart, setInCart] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,23 +52,31 @@ const ProductDetails = ({ data }) => {
     setClick(!click);
     dispatch(addToWishlist(data));
   };
-
-  // Add to cart
-  const addToCartHandler = (id) => {
-    const isItemExists = cart && cart.find((i) => i._id === id);
-
+  
+  const addToCartHandler = (data) => {
+    const isItemExists = cart && cart.find((item) => item._id === data._id);
+  
     if (isItemExists) {
-      toast.error("item already in cart!");
+      toast.error("Item already in cart!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error("Product stock is limited!");
       } else {
-        const cartData = { ...data, qty: count };
+        const cartData = { ...data, qty: count }; // Add quantity to the cart item
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart Successfully!");
+        toast.success("Item added to cart successfully!");
       }
     }
   };
+  
+
+  // Remove from cart handler
+  const removeFromCartHandler = (data) => {
+    setInCart(false);
+    dispatch(removeFromCart(data._id));
+  };
+
+
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -132,7 +141,7 @@ const ProductDetails = ({ data }) => {
                 <div className="w-full flex">
                   {data &&
                     data.images.map((i, index) => (
-                      <div
+                      <div key={index}
                         className={`${
                           select === 0 ? "border" : "null"
                         } cursor-pointer`}
@@ -193,7 +202,32 @@ const ProductDetails = ({ data }) => {
                       +
                     </button>
                   </div>
-
+                    <div>
+                    {/* <button
+                  className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                  onClick={() => addToCartHandler(data._id)}
+                   >
+                  <span className="flex items-center">
+                   <AiOutlineShoppingCart size={30} className="ml-1" />
+                  </span>
+                </button> */}
+                    {inCart ? (
+                      <AiOutlineShoppingCart
+                        size={30}
+                        className="cursor-pointer"
+                        onClick={() => removeFromCartHandler(data)}
+                        color={click ? "red" : "#333"}
+                        title="Remove from wishlist"
+                      />
+                    ) : (
+                      <AiOutlineShoppingCart
+                        size={30}
+                        className="cursor-pointer"
+                        onClick={() => addToCartHandler(data)}
+                        title="Add to wishlist"
+                      />
+                    )}
+                    </div>
                   <div>
                     {click ? (
                       <AiFillHeart
@@ -213,14 +247,14 @@ const ProductDetails = ({ data }) => {
                     )}
                   </div>
                 </div>
-                <div
+                {/* <button
                   className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
                   onClick={() => addToCartHandler(data._id)}
                 >
-                  <span className="text-white flex items-center">
-                    Add to Cart <AiOutlineShoppingCart className="ml-1" />
+                  <span className="flex items-center">
+                   <AiOutlineShoppingCart className="ml-1" />
                   </span>
-                </div>
+                </button> */}
                 <div className="flex items-center pt-8">
                   <Link className="link" to={`/shop/preview/${data?.shop._id}`}>
                     <img
@@ -313,17 +347,17 @@ const ProductDetailsInfo = ({
         </div>
 
         <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(3)}
-          >
-            Seller Information
-          </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
+            {/* <h5
+              className={
+                "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+              }
+              onClick={() => setActive(3)}
+            >
+              Seller Information
+            </h5>
+            {active === 3 ? (
+              <div className={`${styles.active_indicator}`} />
+            ) : null} */}
         </div>
       </div>
 
@@ -349,14 +383,14 @@ const ProductDetailsInfo = ({
             data.reviews.map((item, index) => (
               <div className="w-full flex my-2">
                 <img
-                  src={`${backend_url}/${item.user.avatar}`}
+                  src={`${backend_url}${item.user.avatar}`}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
                 <div className="pl-2 ">
                   <div className="w-full flex items-center">
                     <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
+                    <Ratings rating={item.rating} />
                   </div>
                   <p>{item.comment}</p>
                 </div>
@@ -371,7 +405,7 @@ const ProductDetailsInfo = ({
         </div>
       ) : null}
 
-      {active === 3 ? (
+      {/* {active === 3 ? (
         <>
           <div className="w-full block 800px:flex p-5 ">
             <div className="w-full 800px:w-[50%]">
@@ -427,7 +461,7 @@ const ProductDetailsInfo = ({
             </div>
           </div>
         </>
-      ) : null}
+      ) : null} */}
     </div>
   );
 };

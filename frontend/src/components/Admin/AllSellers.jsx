@@ -17,6 +17,8 @@ const AllSellers = () => {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
 
+// console.log(sellers);
+
   useEffect(() => {
     dispatch(getAllSellers());
   }, [dispatch]);

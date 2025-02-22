@@ -17,6 +17,7 @@ const ProductDetailsPage = () => {
     const eventData = searchParams.get("isEvent");
 
 
+// console.log(allProducts);
 
 
     // const productName = name.replace(/-/g, " ");
