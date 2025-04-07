@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: true,
+    default: "default-avatar.png",
   },
   createdAt: {
     type: Date,
@@ -69,7 +69,12 @@ userSchema.pre("save", async function (next) {
 
 // jwt token
 userSchema.methods.getJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
+  if (!process.env.JWT_SECRET) {
+    console.error("JWT_SECRET is missing!"); // Debugging log
+    throw new Error("JWT_SECRET is not defined in environment variables");
+  }
+
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
   });
 };

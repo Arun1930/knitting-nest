@@ -83,7 +83,8 @@ const productSchema = new mongoose.Schema({
     type: Number,
   },
   shopId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'shop',
     required: true,
   },
   shop: {

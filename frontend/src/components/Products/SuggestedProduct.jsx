@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { productData } from '../../static/data'
 import styles from "../../styles/styles";
 import ProductCard from "../Route/ProductCard/ProductCard"
+import { DataGrid } from '@mui/x-data-grid';
 
 
 

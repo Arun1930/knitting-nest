@@ -40,8 +40,7 @@ const Signup = () => {
         newForm.append("email", email);
         newForm.append("password", password);
     
-        axios
-            .post(`${server}/user/create-user`, newForm, config)
+        axios.post(`${server}/user/create-user`, newForm, config)
             .then((res) => {
                 toast.success(res.data.message);
                 setName("");

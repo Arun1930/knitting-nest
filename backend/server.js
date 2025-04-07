@@ -35,7 +35,6 @@ app.use(
 
 // app.use(cors())
 
-app.use("/", express.static("uploads"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.get("/test", (req, res) => {
@@ -54,9 +53,6 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 // routes
 const user = require("./controller/user");

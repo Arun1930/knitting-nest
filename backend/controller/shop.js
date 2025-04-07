@@ -44,7 +44,7 @@ router.post("/create-shop",upload.single('profileImage'), async (req, res, next)
     // Create shop without activation
     const seller = {
       name: req.body.name,
-      email: email,
+      email: req.body.email,
       password: req.body.password,
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
@@ -79,7 +79,6 @@ router.post(
       }
 
       const user = await Shop.findOne({ email }).select("+password");
-
       if (!user) {
         return next(new ErrorHandler("User doesn't exists!", 400));
       }
@@ -165,11 +164,15 @@ router.put(
     try {
       const existsUser = await Shop.findById(req.seller._id);
 
-      const existAvatarPath = `uploads/${existsUser.avatar}`;
+      if (existsUser.avatar) {
+        const avatarPath = path.join(__dirname, "..", "uploads", existsUser.avatar);
+        
+        if (fs.existsSync(avatarPath)) {
+          fs.unlinkSync(avatarPath); // Delete old image
+        }
+      }
 
-      fs.unlinkSync(existAvatarPath);
-
-      const fileUrl = path.join(req.file.filename);
+      const fileUrl = `uploads/${req.file.filename}`; // Consistent path
 
       const seller = await Shop.findByIdAndUpdate(req.seller._id, {
         avatar: fileUrl,
@@ -288,7 +291,7 @@ router.put(
 
 // delete seller withdraw merthods --- only seller
 router.delete(
-  "/delete-withdraw-method/",
+  "/delete-withdraw-method/:id",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {

@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e6acb375.css",
+    "main.js": "/static/js/main.35da65b9.js",
+    "static/js/453.d855a71b.chunk.js": "/static/js/453.d855a71b.chunk.js",
+    "static/media/abous-img-1.jpeg": "/static/media/abous-img-1.1ef85631a3cd1a3bb16a.jpeg",
+    "static/media/services-img.jpeg": "/static/media/services-img.a73a9e0622542147a411.jpeg",
+    "index.html": "/index.html",
+    "main.e6acb375.css.map": "/static/css/main.e6acb375.css.map",
+    "main.35da65b9.js.map": "/static/js/main.35da65b9.js.map",
+    "453.d855a71b.chunk.js.map": "/static/js/453.d855a71b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6acb375.css",
+    "static/js/main.35da65b9.js"
+  ]
+}

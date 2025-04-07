@@ -29,11 +29,11 @@ const shopSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    // default: "Seller",
+    default: "Seller",
   },
   avatar: {
     type: String,
-    required: true,
+    required: false,
   },
   zipCode: {
     type: Number,
@@ -83,11 +83,15 @@ shopSchema.pre("save", async function (next) {
 
 // jwt token
 shopSchema.methods.getJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
+  if (!process.env.JWT_SECRET) {
+    console.error("JWT_SECRET is missing!"); // Debugging log
+    throw new Error("JWT_SECRET is not defined in environment variables");
+  }
+
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
   });
 };
-
 // comapre password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);

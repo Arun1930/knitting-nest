@@ -6,29 +6,52 @@ const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
+const User = require("../model/user")
 
 // create new order
+
 router.post(
   "/create-order",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-      //   group cart items by shopId
+      // Validate if the user exists
+      const foundUser = await User.findById(user);
+      if (!foundUser) {
+        return next(new ErrorHandler("User not found!", 400));
+      }
+
+      // Group cart items by shopId
       const shopItemsMap = new Map();
 
       for (const item of cart) {
-        const shopId = item.shopId;
+        const shopId = item.shop;
         if (!shopItemsMap.has(shopId)) {
           shopItemsMap.set(shopId, []);
         }
         shopItemsMap.get(shopId).push(item);
       }
 
-      // create an order for each shop
+      // Create orders for each shop
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
+        // Check if the shop exists
+        const shop = await Shop.findById(shopId);
+        if (!shop) {
+          return next(new ErrorHandler("Shop not found!", 400));
+        }
+
+        // Validate products in the cart
+        for (const item of items) {
+          const product = await Product.findById(item.product);
+          if (!product) {
+            return next(new ErrorHandler(`Product with ID ${item.product} not found!`, 400));
+          }
+        }
+
+        // Create order for the shop
         const order = await Order.create({
           cart: items,
           shippingAddress,
@@ -36,6 +59,7 @@ router.post(
           totalPrice,
           paymentInfo,
         });
+
         orders.push(order);
       }
 
@@ -54,7 +78,7 @@ router.get(
   "/get-all-orders/:userId",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const orders = await Order.find({ "user._id": req.params.userId }).sort({
+      const orders = await Order.find({ "user": req.params.userId }).sort({
         createdAt: -1,
       });
 
@@ -188,17 +212,23 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Order Refund successfull!",
+        message: "Order Refund successful!",
       });
 
+      // If refund is successful, restore the product stock
       if (req.body.status === "Refund Success") {
-        order.cart.forEach(async (o) => {
-          await updateOrder(o._id, o.qty);
-        });
+        for (const o of order.cart) {
+          await updateOrder(o.product, o.quantity);
+        }
       }
 
-      async function updateOrder(id, qty) {
-        const product = await Product.findById(id);
+      async function updateOrder(productId, qty) {
+        const product = await Product.findById(productId);
+
+        if (!product) {
+          console.error(`Product with ID ${productId} not found.`);
+          return;
+        }
 
         product.stock += qty;
         product.sold_out -= qty;

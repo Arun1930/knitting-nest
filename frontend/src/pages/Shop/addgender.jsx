@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardHeader from '../../components/Shop/Layout/DashboardHeader';
 import DashboardSideBar from '../../components/Shop/Layout/DashboardSideBar';
 import Table from 'react-bootstrap/Table';
-import { Button } from "@material-ui/core";
+import { Button } from '@mui/material';
 import { AiOutlineDelete } from "react-icons/ai";
 import axios from 'axios';
 import { toast } from "react-toastify";

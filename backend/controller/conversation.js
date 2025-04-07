@@ -12,30 +12,46 @@ router.post(
     try {
       const { groupTitle, userId, sellerId } = req.body;
 
-      const isConversationExist = await Conversation.findOne({ groupTitle });
-
-      if (isConversationExist) {
-        const conversation = isConversationExist;
-        res.status(201).json({
-          success: true,
-          conversation,
-        });
-      } else {
-        const conversation = await Conversation.create({
-          members: [userId, sellerId],
-          groupTitle: groupTitle,
-        });
-
-        res.status(201).json({
-          success: true,
-          conversation,
+      if (!userId || !sellerId) {
+        return res.status(400).json({
+          success: false,
+          message: "Both userId and sellerId are required",
         });
       }
+
+      if (userId === sellerId) {
+        return res.status(400).json({
+          success: false,
+          message: "Cannot create a conversation with yourself",
+        });
+      }
+
+      const isConversationExist = await Conversation.findOne({
+        members: { $all: [userId, sellerId] },
+      });
+
+      if (isConversationExist) {
+        return res.status(200).json({
+          success: true,
+          conversation: isConversationExist,
+        });
+      }
+
+      const conversation = await Conversation.create({
+        members: [userId, sellerId],
+        groupTitle: groupTitle || null,
+      });
+
+      return res.status(201).json({
+        success: true,
+        conversation,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error.response.message), 500);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
+
 
 // get seller conversations
 router.get(
