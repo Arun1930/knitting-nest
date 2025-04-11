@@ -16,13 +16,9 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 }
 // connect db
 connectDatabase();
-const http = require("http");
-const server = http.createServer(app);
 
-// Pass `server` to socket setup
-require("./socket/index")(server); // <- import your socket file like this
-
-server.listen(process.env.PORT, () => {
+// create server
+const server = app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
 
