@@ -6,6 +6,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fs = require("fs");
 const path = require("path");
 
 // config
@@ -37,13 +38,12 @@ app.use(
   })
 );
 
-// app.use(cors())
-
+// Ensure uploads folder exists
+const uploadPath = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// app.get("/test", (req, res) => {
-//   res.send("Hello World!");
-// });
 
 app.use(bodyParser.urlencoded({ extended: true}));
 

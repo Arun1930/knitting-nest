@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const User = require("../model/user");
-// const { upload } = require("../multer");
 const ErrorHandler = require("../utils/ErrorHandler");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -10,7 +9,6 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const multer = require('multer');
-// const path = require('path');
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -35,42 +33,40 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 // Updated route with profile image upload
-router.put(
-  "/update-avatar",
-  isAuthenticated,
-  upload.single("image"),
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const existsUser = await User.findById(req.user.id);
-
-      // FIX 1: Properly format the old avatar path
-      const existAvatarPath = existsUser.avatar;
-
-      // Only delete if file exists and not default
-      if (existAvatarPath && fs.existsSync(existAvatarPath)) {
-        fs.unlinkSync(existAvatarPath);
-      }
-
-      // FIX 2: Properly format the new file path
-      const filePath = req.file ? req.file.path.replace(/\\/g, "/") : null;
-
-      if (!filePath) {
-        return next(new ErrorHandler("Image upload failed", 400));
-      }
-
-      const user = await User.findByIdAndUpdate(req.user.id, {
-        avatar: filePath,
-      }, { new: true });
-
-      res.status(200).json({
-        success: true,
-        user,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+router.post("/create-user", upload.single('profileImage'), async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    const userEmail = await User.findOne({ email });
+    if (userEmail) {
+      return next(new ErrorHandler("User already exists", 400));
     }
-  })
-);
+
+    // Check if a file was uploaded
+      let avatar = null;
+      if (req.file) {
+        avatar = req.file.path.replace(/\\/g, "/");   // Path to the uploaded image
+      }
+
+    // Create the user with the profile image
+    const user = {
+      name,
+      email,
+      password,
+      avatar: avatar, // Save the image path in the database
+    };
+
+    // Save the new user to the database
+    await User.create(user);
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully!",
+      user: { name, email, avatar: avatar }, // Return user data in response
+    });
+  } catch (err) {
+    return next(new ErrorHandler(err.message, 400));
+  }
+});
 
 
 
@@ -190,6 +186,7 @@ compare the provided password with the stored password for authentication purpos
 );
 
 // update user avatar
+
 router.put(
   "/update-avatar",
   isAuthenticated,
@@ -198,29 +195,39 @@ router.put(
     try {
       const existsUser = await User.findById(req.user.id);
 
-      const existAvatarPath = `uploads/users${existsUser.avatar}`;
+      if (!existsUser) {
+        return next(new ErrorHandler("User not found", 404));
+      }
 
-      fs.unlinkSync(existAvatarPath); // Delete Priviuse Image
+      if (existsUser.avatar) {
+        const oldAvatarPath = path.join(__dirname, "..", existsUser.avatar);
+        
+        if (fs.existsSync(oldAvatarPath)) {
+          fs.unlinkSync(oldAvatarPath);
+        }
+      }
 
-      const fileUrl = path.join(req.file.filename); // new image
 
-      /* The code `const user = await User.findByIdAndUpdate(req.user.id, { avatar: fileUrl });` is
-        updating the avatar field of the user with the specified `req.user.id`. It uses the
-        `User.findByIdAndUpdate()` method to find the user by their id and update the avatar field
-        with the new `fileUrl` value. The updated user object is then stored in the `user` variable. */
-      const user = await User.findByIdAndUpdate(req.user.id, {
-        avatar: fileUrl,
-      });
+      // Save new avatar filename
+      const avatarPath = `uploads/users/${req.file.filename}`;
+
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        { avatar: avatarPath },
+        { new: true }
+      );
 
       res.status(200).json({
         success: true,
         user,
       });
     } catch (error) {
+      console.error("Error updating avatar:", error);
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
+
 
 // update user addresses
 router.put(
