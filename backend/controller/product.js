@@ -10,6 +10,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const fs = require("fs");
 const User = require("../model/user");
 const { log } = require("console");
+const mongoose = require("mongoose");
 
 // create product
 router.post(
@@ -59,14 +60,22 @@ router.get(
   "/get-all-products-shop/:id",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const products = await Product.find({ shopId: req.params.id });
+      const shopId = req.params.id;
 
-      res.status(201).json({
+      if (!mongoose.Types.ObjectId.isValid(shopId)) {
+        return next(new ErrorHandler("Invalid shop ID", 400));
+      }
+
+      const products = await Product.find({
+        shopId: new mongoose.Types.ObjectId(shopId),
+      });
+
+      res.status(200).json({
         success: true,
         products,
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

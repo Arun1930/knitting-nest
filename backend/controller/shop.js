@@ -164,19 +164,25 @@ router.put(
     try {
       const existsUser = await Shop.findById(req.seller._id);
 
+      if (!req.file) {
+        return next(new ErrorHandler("No image provided", 400));
+      }
+
+      // Delete old avatar if it exists
       if (existsUser.avatar) {
-        const avatarPath = path.join(__dirname, "..", "uploads", existsUser.avatar);
-        
+        const avatarPath = path.join(__dirname, "..", existsUser.avatar);
         if (fs.existsSync(avatarPath)) {
-          fs.unlinkSync(avatarPath); // Delete old image
+          fs.unlinkSync(avatarPath);
         }
       }
 
-      const fileUrl = `uploads/${req.file.filename}`; // Consistent path
+      const fileUrl = `uploads/users/${req.file.filename}`;
 
-      const seller = await Shop.findByIdAndUpdate(req.seller._id, {
-        avatar: fileUrl,
-      });
+      const seller = await Shop.findByIdAndUpdate(
+        req.seller._id,
+        { avatar: fileUrl },
+        { new: true }
+      ).lean();
 
       res.status(200).json({
         success: true,
