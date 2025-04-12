@@ -29,14 +29,15 @@ export const createProduct = (newForm) => async (dispatch) => {
 
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
+  console.log("Fetching products for shop ID:", id); // 👈 Debug log
+
   try {
-    dispatch({
-      type: "getAllProductsShopRequest",
-    });
+    dispatch({ type: "getAllProductsShopRequest" });
 
     const { data } = await axios.get(
       `${server}/product/get-all-products-shop/${id}`
     );
+
     dispatch({
       type: "getAllProductsShopSuccess",
       payload: data.products,
@@ -48,7 +49,6 @@ export const getAllProductsShop = (id) => async (dispatch) => {
     });
   }
 };
-
 // delete product of a shop
 export const deleteProduct = (id) => async (dispatch) => {
   try {

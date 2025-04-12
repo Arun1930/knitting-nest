@@ -88,22 +88,25 @@ const OrderDetails = () => {
       {/* Order Items */}
       <br />
       <br />
-      {data &&
-        data?.cart.map((item, index) => (
-          <div className="w-full flex items-start mb-5">
-            <img
-              src={`${backend_url}/${item.images[0]}`}
-              alt="Product item order img"
-              className="w-[80x] h-[80px]"
-            />
-            <div className="w-full">
-              <h5 className="pl-3 text-[20px]">{item.name}</h5>
-              <h5 className="pl-3 text-[20px] text-[#00000091]">
-                ₹{item.discountPrice} x {item.qty}
-              </h5>
-            </div>
-          </div>
-        ))}
+      {data?.cart?.length > 0 ? (
+  data.cart.map((item, index) => (
+    <div className="w-full flex items-start mb-5" key={index}>
+      <img
+        src={`${backend_url}/${item?.images?.[0] || "default-image.jpg"}`}
+        alt="Product item order img"
+        className="w-[80px] h-[80px]"
+      />
+      <div className="w-full">
+        <h5 className="pl-3 text-[20px]">{item.name}</h5>
+        <h5 className="pl-3 text-[20px] text-[#00000091]">
+          ₹{item.discountPrice} x {item.qty}
+        </h5>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="text-gray-500">No items found in this order.</p>
+)}
       <div className="border-t w-full text-right">
         <h5>
           Total Price: <strong>₹{data?.totalPrice}</strong>

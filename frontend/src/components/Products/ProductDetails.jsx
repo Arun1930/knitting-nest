@@ -33,7 +33,9 @@ const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getAllProductsShop(data && data?.shop._id));
+    if (data && data.shop && data.shop._id) {
+      dispatch(getAllProductsShop(data.shop._id));
+    }
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
       setClick(true);
     } else {
