@@ -88,20 +88,23 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {stripeApikey &&   (
-        <Elements stripe={loadStripe(stripeApikey)}>
+      {/* {stripeApikey &&   (
+        <Elements stripe={loadStripe(stripeApikey)}> */}
           <Routes>
-            <Route
+          <Route
               path="/payment"
               element={
                 <ProtectedRoute>
                   <PaymentPage />
+                  {/* <Elements stripe={loadStripe(stripeApikey)}>
+                    <PaymentPage />
+                  </Elements> */}
                 </ProtectedRoute>
               }
             />
           </Routes>
-        </Elements>
-      )}
+        {/* </Elements> */}
+      {/* )} */}
 
       <Routes>
         <Route path="/" element={<HomePage />} />

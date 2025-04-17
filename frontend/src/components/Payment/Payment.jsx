@@ -104,28 +104,33 @@ const Payment = () => {
 
     const paymentHandler = async (e) => {
         e.preventDefault();
+    
+        if (!stripe || !elements) {
+            toast.error("Stripe is not available.");
+            return;
+        }
+    
         try {
             const config = {
                 headers: {
                     "Content-Type": "application/json",
                 },
             };
-
+    
             const { data } = await axios.post(
                 `${server}/payment/process`,
                 paymentData,
                 config
             );
-
+    
             const client_secret = data.client_secret;
-
-            if (!stripe || !elements) return;
+    
             const result = await stripe.confirmCardPayment(client_secret, {
                 payment_method: {
                     card: elements.getElement(CardNumberElement),
                 },
             });
-
+    
             if (result.error) {
                 toast.error(result.error.message);
             } else {
@@ -135,23 +140,21 @@ const Payment = () => {
                         status: result.paymentIntent.status,
                         type: "Credit Card",
                     };
-
-                    await axios
-                        .post(`${server}/order/create-order`, order, config)
-                        .then((res) => {
-                            setOpen(false);
-                            navigate("/order/success");
-                            toast.success("Order successful!");
-                            localStorage.setItem("cartItems", JSON.stringify([]));
-                            localStorage.setItem("latestOrder", JSON.stringify([]));
-                            window.location.reload();
-                        });
+    
+                    await axios.post(`${server}/order/create-order`, order, config);
+                    setOpen(false);
+                    navigate("/order/success");
+                    toast.success("Order successful!");
+                    localStorage.setItem("cartItems", JSON.stringify([]));
+                    localStorage.setItem("latestOrder", JSON.stringify([]));
+                    window.location.reload();
                 }
             }
         } catch (error) {
-            toast.error(error);
+            toast.error(error.message);
         }
     };
+    
 
 
     //  Cash on Delevery Handler (COD)
