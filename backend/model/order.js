@@ -5,14 +5,25 @@ const orderSchema = new mongoose.Schema({
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product", // Reference to Product model
+        ref: "product",
         required: true,
       },
       shop: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "shop", // Reference to Shop model
+        ref: "shop",
         required: true,
       },
+      name: {
+        type: String,
+      },
+      discountPrice: {
+        type: Number,
+      },
+      images: [
+        {
+          type: String,
+        },
+      ],
       quantity: {
         type: Number,
         required: true,
@@ -23,6 +34,7 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  
   shippingAddress: {
     type: Object,
     required: true,

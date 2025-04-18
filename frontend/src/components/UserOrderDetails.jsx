@@ -100,32 +100,37 @@ const UserOrderDetails = () => {
       {/* Order Items */}
       <br />
       <br />
-      {data &&
-        data?.cart.map((item, index) => {
-          return (
-            <div className="w-full flex items-start mb-5">
-              <img
-                src={`${backend_url}/${item.images[0]}`}
-                alt="Product item order img"
-                className="w-[80x] h-[80px]"
-              />
-              <div className="w-full">
-                <h5 className="pl-3 text-[20px]">{item.name}</h5>
-                <h5 className="pl-3 text-[20px] text-[#00000091]">
-                  US${item.discountPrice} x {item.qty}
-                </h5>
-              </div>
-              {!item.isReviewed && data?.status === "Delivered" ? (
-                <div
-                  className={`${styles.button} text-[#000]`}
-                  onClick={() => setOpen(true) || setSelectedItem(item)}
-                >
-                  write a review
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
+      {data?.cart && data.cart.length > 0 ? (
+      data.cart.map((item, index) => {
+      return (
+      <div className="w-full flex items-start mb-5" key={index}>
+        {/* Image rendering with fallback */}
+        <img
+        src={item.images?.[0] ? `${backend_url}${item.images[0]}` : "/default-image.jpg"}
+
+          alt="Product item order img"
+          className="w-[80px] h-[80px]"
+        />
+        <div className="w-full">
+          <h5 className="pl-3 text-[20px]">{item.name}</h5>
+          <h5 className="pl-3 text-[20px] text-[#00000091]">
+            US${item.discountPrice} x {item.qty}
+          </h5>
+        </div>
+        {!item.isReviewed && data?.status === "Delivered" ? (
+          <div
+            className={`${styles.button} text-[#000]`}
+            onClick={() => setOpen(true) || setSelectedItem(item)}
+          >
+            Write a review
+          </div>
+        ) : null}
+      </div>
+    );
+  })
+) : (
+  <p>No items in the cart.</p>
+)}
 
       {/* Review Popup */}
       {open && (
@@ -229,7 +234,7 @@ const UserOrderDetails = () => {
           <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
 
           <h4 className="pt-3 text-[20px]">
-            {data?.shippingAddress.address1 +
+          {data?.shippingAddress.address1 +
               " " +
               data?.shippingAddress.address2}
           </h4>

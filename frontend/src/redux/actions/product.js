@@ -29,7 +29,6 @@ export const createProduct = (newForm) => async (dispatch) => {
 
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
-  console.log("Fetching products for shop ID:", id); // 👈 Debug log
 
   try {
     dispatch({ type: "getAllProductsShopRequest" });
