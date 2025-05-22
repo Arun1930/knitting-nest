@@ -99,7 +99,7 @@ const AdminSideBar = ({ active }) => {
               active === 6 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Add faculity
+            Add faculty
           </h5>
         </Link>
       </div>

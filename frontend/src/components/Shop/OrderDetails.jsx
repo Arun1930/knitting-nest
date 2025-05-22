@@ -92,10 +92,10 @@ const OrderDetails = () => {
   data.cart.map((item, index) => (
     <div className="w-full flex items-start mb-5" key={index}>
       <img
-        src={`${backend_url}/${item?.images?.[0] || "default-image.jpg"}`}
-        alt="Product item order img"
-        className="w-[80px] h-[80px]"
-      />
+              src={item.images?.[0] ? `${backend_url}${item.images[0]}` : "/default-image.jpg"}
+                alt="Product item order img"
+                className="w-[80px] h-[80px]"
+              />
       <div className="w-full">
         <h5 className="pl-3 text-[20px]">{item.name}</h5>
         <h5 className="pl-3 text-[20px] text-[#00000091]">

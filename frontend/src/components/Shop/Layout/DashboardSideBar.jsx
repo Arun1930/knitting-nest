@@ -139,6 +139,19 @@ const DashboardSideBar = ({ active }) => {
                     </h5>
                 </Link>
             </div>
+            <div className="w-full flex items-center p-4">
+                <Link to="/dashboard-add-design" className="w-full flex items-center link">
+                    <VscNewFile
+                        size={30}
+                        color={`${active === 13 ? "crimson" : "#555"}`}
+                    />
+                    <h5
+                        className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 13 ? "text-[crimson]" : "text-[#555]"}`}
+                    >
+                        Add Design
+                    </h5>
+                </Link>
+            </div>
 
             {/* <div className="w-full flex items-center p-4">
                 <Link className="link" to="/dashboard-events" className="w-full flex items-center">

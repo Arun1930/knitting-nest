@@ -69,6 +69,7 @@ import AddAssortment from "./pages/Shop/addassortment";
 import AddMeasurment from "./components/Profile/addmeasurment";
 import Test from "./components/Profile/test";
 import AddDesigner from "./pages/Shop/adddesigner";
+import AddDesign from "./pages/Shop/adddesign";
 
 const App = () => {
   const [stripeApikey, setStripeApiKey] = useState("");
@@ -88,20 +89,23 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {stripeApikey &&   (
-        <Elements stripe={loadStripe(stripeApikey)}>
+      {/* {stripeApikey &&   (
+        <Elements stripe={loadStripe(stripeApikey)}> */}
           <Routes>
-            <Route
+          <Route
               path="/payment"
               element={
                 <ProtectedRoute>
                   <PaymentPage />
+                  {/* <Elements stripe={loadStripe(stripeApikey)}>
+                    <PaymentPage />
+                  </Elements> */}
                 </ProtectedRoute>
               }
             />
           </Routes>
-        </Elements>
-      )}
+        {/* </Elements> */}
+      {/* )} */}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -186,6 +190,7 @@ const App = () => {
         {/* shop Routes */}
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/add-designer" element={<AddDesigner />} />
+        <Route path="/dashboard-add-design" element={<AddDesign />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
         <Route
           path="/shop/:id"

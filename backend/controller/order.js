@@ -37,31 +37,41 @@ router.post(
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
-        // Check if the shop exists
         const shop = await Shop.findById(shopId);
         if (!shop) {
           return next(new ErrorHandler("Shop not found!", 400));
         }
-
-        // Validate products in the cart
+      
+        const enrichedItems = [];
+      
         for (const item of items) {
           const product = await Product.findById(item.product);
           if (!product) {
             return next(new ErrorHandler(`Product with ID ${item.product} not found!`, 400));
           }
+      
+          enrichedItems.push({
+            product: product._id,
+            shop: product.shopId,
+            name: product.name,
+            discountPrice: product.discountPrice,
+            images: product.images,
+            quantity: item.quantity,
+            price: item.price,
+          });
         }
-
-        // Create order for the shop
+      
         const order = await Order.create({
-          cart: items,
+          cart: enrichedItems,
           shippingAddress,
           user,
           totalPrice,
           paymentInfo,
         });
-
+      
         orders.push(order);
       }
+      
 
       res.status(201).json({
         success: true,
@@ -98,11 +108,10 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const orders = await Order.find({
-        "cart.shopId": req.params.shopId,
+        "cart.shop": req.params.shopId,
       }).sort({
         createdAt: -1,
       });
-
       res.status(200).json({
         success: true,
         orders,

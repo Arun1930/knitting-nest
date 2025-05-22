@@ -5,7 +5,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfAdmin } from "../redux/actions/order";
 
-console.log("AdminDashboardOrders Component Loaded"); // Should log when the file is executed
 
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
@@ -27,9 +26,7 @@ const AdminDashboardOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        return params.row.status === "Delivered" ? "greenColor" : "redColor";
       },
     },
     {

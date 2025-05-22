@@ -139,12 +139,12 @@ const Checkout = () => {
                 </div>
             </div>
             <div
-                className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
+                className={`${styles.button} w-[150px] 800px:w-[280px] mt-10 cursor-pointer`}
                 onClick={paymentSubmit}
-            >
+                >
                 <h5 className="text-black">Go to Payment</h5>
             </div>
-        </div>
+            </div>
     );
 };
 
@@ -231,14 +231,14 @@ const ShippingInfo = ({
                         </select>
                     </div>
                     <div className="w-[50%]">
-                        <label className="block pb-2">City</label>
+                        <label className="block pb-2">State</label>
                         <select
                             className="w-[95%] border h-[40px] rounded-[5px]"
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                         >
                             <option className="block pb-2" value="">
-                                Choose your City
+                                Choose your State
                             </option>
                             {State &&
                                 State.getStatesOfCountry(country).map((item) => (

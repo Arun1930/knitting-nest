@@ -31,7 +31,6 @@ const ProfileContent = ({ active }) => {
     const [avatar, setAvatar] = useState(null);
 
     const dispatch = useDispatch();
-console.log(user);
 
     useEffect(() => {
         if (error) {
@@ -207,10 +206,9 @@ const AllOrders = () => {
             minWidth: 130,
             flex: 0.7,
             cellClassName: (params) => {
-                return params.getValue(params.id, "status") === "Delivered"
-                    ? "greenColor"
-                    : "redColor";
-            },
+                const value = params.row.status; // ✅ use `params.row`
+                return value === "Delivered" ? "greenColor" : "redColor";
+              }
         },
         {
             field: "itemsQty",
@@ -391,9 +389,7 @@ const TrackOrder = () => {
             minWidth: 150,
             flex: 0.7,
             cellClassName: (params) => {
-                return params.getValue(params.id, "status") === "Delivered"
-                    ? "greenColor"
-                    : "redColor";
+                return params.value === "Delivered" ? "greenColor" : "redColor";
             },
         },
         {

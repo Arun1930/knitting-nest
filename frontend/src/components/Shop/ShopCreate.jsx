@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { RxAvatar } from "react-icons/rx";
-import styles from "../../styles/styles"; // Ensure this path is correct
+import styles from "../../styles/styles"; 
+import { server } from "../../server";// Ensure this path is correct
 
 const ShopCreate = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const ShopCreate = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v2/shop/create-shop", // Replace with your server URL
+        `${server}/api/v2/shop/create-shop`, // Replace with your server URL
         formData,
         {
           headers: {

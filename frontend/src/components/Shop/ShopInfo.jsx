@@ -89,21 +89,20 @@ const ShopInfo = ({ isOwner }) => {
                             <h5 className="font-[600]">Joined On</h5>
                             <h4 className="text-[#000000b0]">{data?.createdAt?.slice(0, 10)}</h4>
                         </div>
-                        {isOwner && (
-                            <div className="py-3 px-4">
-                                <Link className="link" to="/settings">
-                                    <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>
-                                        <span className="text-white">Edit Shop</span>
-                                    </div>
-                                </Link>
+                        <div className="py-3 px-4">
+                            <Link to="/settings">
+                                <button className="bg-blue-600 text-white w-full h-[42px] rounded mb-2">
+                                Edit Shop
+                                </button>
+                            </Link>
 
-                                <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
-                                    onClick={logoutHandler}
-                                >
-                                    <span className="text-white">Log Out</span>
-                                </div>
+                            <button
+                                className="bg-red-600 text-white w-full h-[42px] rounded"
+                                onClick={logoutHandler}
+                            >
+                                Logout
+                            </button>
                             </div>
-                        )}
                     </div>
                 )
             }

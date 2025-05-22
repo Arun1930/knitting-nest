@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
-import {
-    CardNumberElement,
-    CardCvcElement,
-    CardExpiryElement,
-    useStripe,
-    useElements,
-} from "@stripe/react-stripe-js";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -21,13 +14,59 @@ const Payment = () => {
     const [open, setOpen] = useState(false);
     const { user } = useSelector((state) => state.user);
     const navigate = useNavigate();
-    const stripe = useStripe();
-    const elements = useElements();
 
     useEffect(() => {
         const orderData = JSON.parse(localStorage.getItem("latestOrder"));
         setOrderData(orderData);
     }, []);
+    const razorpayHandler = async () => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+    
+        const { data } = await axios.post(`${server}/payment/razorpay-order`, {
+            amount: orderData.totalPrice * 100, // amount in paise
+        }, config);
+    
+        const options = {
+            key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay key
+            amount: data.amount,
+            currency: data.currency,
+            name: "Your Shop Name",
+            description: "Order Payment",
+            order_id: data.id,
+            handler: async function (response) {
+                // Order successful
+                const paymentInfo = {
+                    id: response.razorpay_payment_id,
+                    status: "succeeded",
+                    type: "Razorpay",
+                };
+    
+                order.paymentInfo = paymentInfo;
+    
+                await axios.post(`${server}/order/create-order`, order, config);
+                navigate("/order/success");
+                toast.success("Order successful!");
+                localStorage.setItem("cartItems", JSON.stringify([]));
+                localStorage.setItem("latestOrder", JSON.stringify([]));
+                window.location.reload();
+            },
+            prefill: {
+                name: user.name,
+                email: user.email,
+            },
+            theme: {
+                color: "#f63b60",
+            },
+        };
+    
+        const razor = new window.Razorpay(options);
+        razor.open();
+    };
+    
 
     // Pay-pal
     const createOrder = (data, actions) => {
@@ -37,7 +76,7 @@ const Payment = () => {
                     {
                         description: "Sunflower",
                         amount: {
-                            currency_code: "USD",
+                            currency_code: "INR",
                             value: orderData?.totalPrice,
                         },
                     },
@@ -101,57 +140,7 @@ const Payment = () => {
     }
 
 
-
-    const paymentHandler = async (e) => {
-        e.preventDefault();
-        try {
-            const config = {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            };
-
-            const { data } = await axios.post(
-                `${server}/payment/process`,
-                paymentData,
-                config
-            );
-
-            const client_secret = data.client_secret;
-
-            if (!stripe || !elements) return;
-            const result = await stripe.confirmCardPayment(client_secret, {
-                payment_method: {
-                    card: elements.getElement(CardNumberElement),
-                },
-            });
-
-            if (result.error) {
-                toast.error(result.error.message);
-            } else {
-                if (result.paymentIntent.status === "succeeded") {
-                    order.paymentInfo = {
-                        id: result.paymentIntent.id,
-                        status: result.paymentIntent.status,
-                        type: "Credit Card",
-                    };
-
-                    await axios
-                        .post(`${server}/order/create-order`, order, config)
-                        .then((res) => {
-                            setOpen(false);
-                            navigate("/order/success");
-                            toast.success("Order successful!");
-                            localStorage.setItem("cartItems", JSON.stringify([]));
-                            localStorage.setItem("latestOrder", JSON.stringify([]));
-                            window.location.reload();
-                        });
-                }
-            }
-        } catch (error) {
-            toast.error(error);
-        }
-    };
+    
 
 
     //  Cash on Delevery Handler (COD)
@@ -163,11 +152,28 @@ const Payment = () => {
                 "Content-Type": "application/json",
             },
         };
+        const transformedCart = orderData?.cart?.map((item) => ({
+            product: item._id,
+            shop: item.shop._id || item.shop, // in case it's populated
+            name: item.name,
+            quantity: item.quantity || 1, // default quantity if not set
+            price: item.discountPrice || item.price,
+          }));
+          
+          const order = {
+            cart: transformedCart,
+            shippingAddress: orderData?.shippingAddress,
+            user: user._id,
+            totalPrice: Number(orderData?.totalPrice),
+            paymentInfo: {
+              type: "Cash On Delivery",
+            },
+          };
 
         order.paymentInfo = {
             type: "Cash On Delivery",
         };
-
+        console.log("Order being sent:", order);
         await axios
             .post(`${server}/order/create-order`, order, config)
             .then((res) => {
@@ -191,7 +197,6 @@ const Payment = () => {
                         setOpen={setOpen}
                         onApprove={onApprove}
                         createOrder={createOrder}
-                        paymentHandler={paymentHandler}
                         cashOnDeliveryHandler={cashOnDeliveryHandler}
 
                     />
@@ -238,94 +243,7 @@ const PaymentInfo = ({
                 </div>
 
                 {/* pay with card */}
-                {select === 1 ? (
-                    <div className="w-full flex border-b">
-                        <form className="w-full" onSubmit={paymentHandler}>
-                            <div className="w-full flex pb-3">
-                                <div className="w-[50%]">
-                                    <label className="block pb-2">Name on Card</label>
-                                    <input required
-                                        value={user && user.name}
-                                        className={`${styles.input} !w-[95%]`} />
-                                </div>
-                                <div className="w-[50%]">
-                                    <label className="block pb-2">Exp Date</label>
-                                    <CardExpiryElement
-                                        className={`${styles.input}`}
-                                        options={{
-                                            style: {
-                                                base: {
-                                                    fontSize: "19px",
-                                                    lineHeight: 1.5,
-                                                    color: "#444",
-                                                },
-                                                empty: {
-                                                    color: "#3a120a",
-                                                    backgroundColor: "transparent",
-                                                    "::placeholder": {
-                                                        color: "#444",
-                                                    },
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="w-full flex pb-3">
-                                <div className="w-[50%]">
-                                    <label className="block pb-2">Name On Card</label>
-                                    <CardNumberElement
-                                        className={`${styles.input} !h-[35px] !w-[95%]`}
-                                        options={{
-                                            style: {
-                                                base: {
-                                                    fontSize: "19px",
-                                                    lineHeight: 1.5,
-                                                    color: "#444",
-                                                },
-                                                empty: {
-                                                    color: "#3a120a",
-                                                    backgroundColor: "transparent",
-                                                    "::placeholder": {
-                                                        color: "#444",
-                                                    },
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </div>
-                                <div className="w-[50%]">
-                                    <label className="block pb-2">CVV</label>
-                                    <CardCvcElement
-                                        className={`${styles.input} !h-[35px]`}
-                                        options={{
-                                            style: {
-                                                base: {
-                                                    fontSize: "19px",
-                                                    lineHeight: 1.5,
-                                                    color: "#444",
-                                                },
-                                                empty: {
-                                                    color: "#3a120a",
-                                                    backgroundColor: "transparent",
-                                                    "::placeholder": {
-                                                        color: "#444",
-                                                    },
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                            <input
-                                type="submit"
-                                value="Submit"
-                                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
-                            />
-                        </form>
-                    </div>
-                ) : null}
             </div>
 
             <br />
@@ -431,21 +349,21 @@ const CartData = ({ orderData }) => {
         <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
             <div className="flex justify-between">
                 <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-                <h5 className="text-[18px] font-[600]">${orderData?.subTotalPrice}</h5>
+                <h5 className="text-[18px] font-[600]">₹{orderData?.subTotalPrice}</h5>
             </div>
             <br />
             <div className="flex justify-between">
                 <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-                <h5 className="text-[18px] font-[600]">${shipping}</h5>
+                <h5 className="text-[18px] font-[600]">₹{shipping}</h5>
             </div>
             <br />
             <div className="flex justify-between border-b pb-3">
                 <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
-                <h5 className="text-[18px] font-[600]">{orderData?.discountPrice ? "$" + orderData.discountPrice : "-"}
+                <h5 className="text-[18px] font-[600]">{orderData?.discountPrice ? "₹" + orderData.discountPrice : "-"}
                 </h5>
             </div>
             <h5 className="text-[18px] font-[600] text-end pt-3">
-                ${orderData?.totalPrice}
+                 ₹{orderData?.totalPrice}
             </h5>
             <br />
 

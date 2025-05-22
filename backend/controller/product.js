@@ -26,7 +26,7 @@ router.post(
       }
 
       const files = req.files || [];
-      const imageUrls = files.length > 0 ? files.map((file) => `${file.filename}`) : [];
+      const imageUrls = files.length > 0 ? files.map((file) => `uploads/${file.filename}`) : [];
 
       const { name, description, material, assortment, gender, embellishment, trim_border, pattern, discountPrice, stock } = req.body;
 
