@@ -320,5 +320,42 @@ router.delete(
     }
   })
 );
+router.post(
+  "/add-design",
+  upload.single("designImage"),
+  async (req, res, next) => {
+    try {
+      const { sellerId } = req.body;
+      const shop = await Shop.findById(sellerId);
+
+      if (!shop) {
+        return next(new ErrorHandler("Shop not found", 404));
+      }
+
+      let imagePath = null;
+      if (req.file) {
+        imagePath = req.file.path.replace(/\\/g, "/");
+      } else {
+        return next(new ErrorHandler("Design image is required", 400));
+      }
+
+      const design = {
+        image: imagePath,
+        createdAt: new Date(),
+      };
+
+      shop.designs.push(design);
+      await shop.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Design added successfully!",
+        designs: shop.designs,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+)
 
 module.exports = router;
