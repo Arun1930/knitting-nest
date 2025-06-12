@@ -199,16 +199,16 @@ const OrderDetails = () => {
         </select>
       ) : null}
 
-      <div
-        className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
-        onClick={
-          data?.status !== "Processing refund"
-            ? orderUpdateHandler
-            : refundOrderUpdateHandler
-        }
-      >
-        Update Status
-      </div>
+      <button
+          className="mt-5 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-6 rounded-md transition duration-200"
+          onClick={
+            data?.status !== "Processing refund"
+              ? orderUpdateHandler
+              : refundOrderUpdateHandler
+          }
+        >
+          Update Status
+        </button>
     </div>
   );
 };
