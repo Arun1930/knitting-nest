@@ -21,18 +21,24 @@ const AllEvents = () => {
     {
       field: "name",
       headerName: "Name",
+      headerAlign: "center",
+      align: "center",
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "price",
       headerName: "Price",
+      headerAlign: "center",
+      align: "center",
       minWidth: 100,
       flex: 0.6,
     },
     {
       field: "Stock",
       headerName: "Stock",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 80,
       flex: 0.5,
@@ -41,6 +47,8 @@ const AllEvents = () => {
     {
       field: "sold",
       headerName: "Sold out",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 130,
       flex: 0.6,
@@ -50,6 +58,8 @@ const AllEvents = () => {
       flex: 0.8,
       minWidth: 100,
       headerName: "",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       sortable: false,
       renderCell: (params) => {

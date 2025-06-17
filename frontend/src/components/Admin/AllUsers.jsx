@@ -36,13 +36,17 @@ const AllUsers = () => {
 
     {
       field: "name",
-      headerName: "name",
+      headerName: "Name",
+      headerAlign: "center",
+      align: "center",
       minWidth: 130,
       flex: 0.7,
     },
     {
       field: "email",
       headerName: "Email",
+      headerAlign: "center",
+      align: "center",
       type: "text",
       minWidth: 130,
       flex: 0.7,
@@ -50,6 +54,8 @@ const AllUsers = () => {
     {
       field: "role",
       headerName: "User Role",
+      headerAlign: "center",
+      align: "center",
       type: "text",
       minWidth: 130,
       flex: 0.7,
@@ -57,7 +63,9 @@ const AllUsers = () => {
 
     {
       field: "joinedAt",
-      headerName: "joinedAt",
+      headerName: "JoinedAt",
+      headerAlign: "center",
+      align: "center",
       type: "text",
       minWidth: 130,
       flex: 0.8,
@@ -68,6 +76,8 @@ const AllUsers = () => {
       flex: 1,
       minWidth: 150,
       headerName: "Delete User",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -118,13 +128,13 @@ const AllUsers = () => {
               </h3>
               <div className="w-full flex items-center justify-center">
                 <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`}
+                  className={`${styles.button} text-black text-[18px] !h-[42px] mr-4 cursor-pointer`}
                   onClick={() => setOpen(false)}
                 >
                   cancel
                 </div>
                 <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] ml-4`}
+                  className={`${styles.button} text-black text-[18px] !h-[42px] ml-4 cursor-pointer`}
                   onClick={() => setOpen(false) || handleDelete(userId)}
                 >
                   confirm
