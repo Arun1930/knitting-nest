@@ -19,10 +19,19 @@ const AllOrders = () => {
     }, [dispatch]);
 
     const columns = [
-        { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+        { 
+            field: "id", 
+            headerName: "Order ID",
+            headerAlign: "center",
+            align: "center", 
+            minWidth: 150,
+            flex: 0.7 
+        },
         {
             field: "status",
             headerName: "Status",
+            headerAlign: "center",
+            align: "center",
             minWidth: 130,
             flex: 0.7,
             cellClassName: (params) => {
@@ -30,8 +39,11 @@ const AllOrders = () => {
             },
         },
         {
+            
             field: "itemsQty",
             headerName: "Items Qty",
+            headerAlign: "center",
+            align: "center",
             type: "number",
             minWidth: 130,
             flex: 0.7,
@@ -40,16 +52,20 @@ const AllOrders = () => {
         {
             field: "total",
             headerName: "Total",
+            headerAlign: "center",
+            align: "center",
             type: "number",
             minWidth: 130,
             flex: 0.8,
         },
 
         {
-            field: " ",
+            field: "Order Preview",
             flex: 1,
             minWidth: 150,
-            headerName: "",
+            headerName: "Order Preview",
+            headerAlign: "center",
+            align: "center",
             type: "number",
             sortable: false,
             renderCell: (params) => {

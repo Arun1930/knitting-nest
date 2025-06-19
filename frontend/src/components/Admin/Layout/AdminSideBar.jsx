@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 import React from "react";
 import { FiShoppingBag } from "react-icons/fi";
 import { IoPersonAdd } from "react-icons/io5";

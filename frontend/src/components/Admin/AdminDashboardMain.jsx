@@ -30,11 +30,20 @@ const AdminDashboardMain = () => {
   const adminBalance = adminEarning?.toFixed(2);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { 
+      field: "id",
+      headerName: "Order ID",
+      headerAlign: "center",
+      align: "center", 
+      minWidth: 150, 
+      flex: 0.7 
+    },
 
     {
       field: "status",
       headerName: "Status",
+      headerAlign: "center",
+      align: "center",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -44,6 +53,8 @@ const AdminDashboardMain = () => {
     {
       field: "itemsQty",
       headerName: "Items Qty",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -52,6 +63,8 @@ const AdminDashboardMain = () => {
     {
       field: "total",
       headerName: "Total",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -59,6 +72,8 @@ const AdminDashboardMain = () => {
     {
       field: "createdAt",
       headerName: "Order Date",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -70,7 +85,7 @@ const AdminDashboardMain = () => {
     adminOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
+        itemsQty: item.cart.length,
         total: item?.totalPrice + " ₹",
         status: item?.status,
         createdAt: item?.createdAt.slice(0, 10),

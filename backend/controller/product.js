@@ -153,7 +153,7 @@ router.put(
         comment,
         productId,
       };
-       product.reviews.push(review);
+      product.reviews.push(review);
 
       // const isReviewed = product.reviews.find(
       //   (rev) => rev.user._id === req.user._id

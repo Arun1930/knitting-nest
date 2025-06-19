@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
 import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { backend_url, server } from "../../server";
 
 
 const CreateProduct = () => {
@@ -27,6 +29,9 @@ const CreateProduct = () => {
     const [trimBorder, setTrimBorder] = useState("");
     const [pattern, setPattern] = useState("");
     const [colors, setColors] = useState([]);
+    const [genderoptions, setgenderoptions] = useState([]);
+    const [materialoptions, setmaterialoptions] = useState([]);
+    const [assortmentoptions, setassortmentoptions] = useState([]);
 
     useEffect(() => {
         if (error) {
@@ -75,6 +80,25 @@ const CreateProduct = () => {
 
         dispatch(createProduct(newForm));
     };
+    useEffect(() => {
+  const fetchFilters = async () => {
+    try {
+      const [genderRes, materialRes, assortmentRes] = await Promise.all([
+        axios.get(`${server}/getallgender`),
+        axios.get(`${server}/getmaterial`),
+        axios.get(`${server}/getassortment`),
+      ]);
+      setgenderoptions(genderRes.data || []);
+      setmaterialoptions(materialRes.data || []);
+      setassortmentoptions(assortmentRes.data || []);
+    } catch (error) {
+      console.error("Error fetching filters:", error.message);
+    }
+  };
+
+  fetchFilters();
+}, []);
+
 
     return (
         <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
@@ -147,42 +171,48 @@ const CreateProduct = () => {
                 <br />
                 {/* Material */}
                 <div>
-                    <label className="pb-2">Material</label>
-                    <input
-                        type="text"
-                        name="material"
-                        value={material}
-                        className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        onChange={(e) => setMaterial(e.target.value)}
-                        placeholder="Enter product material..."
-                    />
+                <label className="pb-2">Material</label>
+                <select
+                    value={material}
+                    onChange={(e) => setMaterial(e.target.value)}
+                    className="w-full mt-2 border h-[35px] rounded-[5px]"
+                >
+                    <option value="">Select material</option>
+                    {materialoptions.map((item) => (
+                    <option key={item._id} value={item.material}>{item.material}</option>
+                    ))}
+                </select>
                 </div>
                 <br />
                 {/* Assortment */}
-                <div>
-                    <label className="pb-2">Assortment</label>
-                    <input
-                        type="text"
-                        name="assortment"
-                        value={assortment}
-                        className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        onChange={(e) => setAssortment(e.target.value)}
-                        placeholder="Enter product assortment..."
-                    />
+               <div>
+                <label className="pb-2">Assortment</label>
+                <select
+                    value={assortment}
+                    onChange={(e) => setAssortment(e.target.value)}
+                    className="w-full mt-2 border h-[35px] rounded-[5px]"
+                >
+                    <option value="">Select assortment</option>
+                    {assortmentoptions.map((item) => (
+                    <option key={item._id} value={item.Assortment}>{item.Assortment}</option>
+                    ))}
+                </select>
                 </div>
                 <br />
                 {/* Gender */}
                 <div>
                     <label className="pb-2">Gender</label>
-                    <input
-                        type="text"
-                        name="gender"
+                    <select
                         value={gender}
-                        className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         onChange={(e) => setGender(e.target.value)}
-                        placeholder="Enter gender..."
-                    />
-                </div>
+                        className="w-full mt-2 border h-[35px] rounded-[5px]"
+                    >
+                        <option value="">Select gender</option>
+                        {genderoptions.map((item) => (
+                        <option key={item._id} value={item.Gender}>{item.Gender}</option>
+                        ))}
+                    </select>
+                    </div>
                 <br />
                 {/* Embellishment */}
                 <div>

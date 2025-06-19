@@ -24,22 +24,34 @@ const AllProducts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    { 
+      field: "id",
+      headerName: "Product Id",
+      headerAlign: "center",
+      align: "center",
+      minWidth: 150, flex: 1 
+    },
     {
       field: "name",
       headerName: "Name",
+      headerAlign: "center",
+      align: "center",
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "price",
       headerName: "Price",
+      headerAlign: "center",
+      align: "center",
       minWidth: 100,
       flex: 0.6,
     },
     {
       field: "Stock",
       headerName: "Stock",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 80,
       flex: 0.5,
@@ -48,21 +60,25 @@ const AllProducts = () => {
     {
       field: "sold",
       headerName: "Sold out",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       minWidth: 130,
       flex: 0.6,
     },
     {
       field: "Preview",
-      flex: 0.8,
+      flex: 0.3,
       minWidth: 100,
-      headerName: "",
+      headerName: "Preview",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
           <>
-            <Link className="link" to={`/product/${params.id}`}>
+            <Link className="link" to={`/dashboard/product/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>
@@ -73,9 +89,11 @@ const AllProducts = () => {
     },
     {
       field: "Delete",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 120,
-      headerName: "",
+      headerName: "Delete",
+      headerAlign: "center",
+      align: "center",
       type: "number",
       sortable: false,
       renderCell: (params) => {
