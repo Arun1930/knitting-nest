@@ -70,6 +70,7 @@ import AddMeasurment from "./components/Profile/addmeasurment";
 import Test from "./components/Profile/test";
 import AddDesigner from "./pages/Shop/adddesigner";
 import AddDesign from "./pages/Shop/adddesign";
+import ResetPasswordPage from "./pages/resetPassword";
 
 const App = () => {
   const [stripeApikey, setStripeApiKey] = useState("");
@@ -110,6 +111,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+         <Route path="/resetPassword" element={<ResetPasswordPage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route
           path="/activation/:activation_token"

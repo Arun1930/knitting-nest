@@ -19,53 +19,36 @@ const Payment = () => {
         const orderData = JSON.parse(localStorage.getItem("latestOrder"));
         setOrderData(orderData);
     }, []);
-    const razorpayHandler = async () => {
-        const config = {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        };
-    
-        const { data } = await axios.post(`${server}/payment/razorpay-order`, {
-            amount: orderData.totalPrice * 100, // amount in paise
-        }, config);
-    
-        const options = {
-            key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay key
-            amount: data.amount,
-            currency: data.currency,
-            name: "Your Shop Name",
-            description: "Order Payment",
-            order_id: data.id,
-            handler: async function (response) {
-                // Order successful
-                const paymentInfo = {
-                    id: response.razorpay_payment_id,
-                    status: "succeeded",
-                    type: "Razorpay",
-                };
-    
-                order.paymentInfo = paymentInfo;
-    
-                await axios.post(`${server}/order/create-order`, order, config);
-                navigate("/order/success");
-                toast.success("Order successful!");
-                localStorage.setItem("cartItems", JSON.stringify([]));
-                localStorage.setItem("latestOrder", JSON.stringify([]));
-                window.location.reload();
-            },
-            prefill: {
-                name: user.name,
-                email: user.email,
-            },
-            theme: {
-                color: "#f63b60",
-            },
-        };
-    
-        const razor = new window.Razorpay(options);
-        razor.open();
+    const paymentHandler = async () => {
+    try {
+    const options = {
+    key: "rzp_test_U2XWpODmhRkL0l", // Replace with your Razorpay key
+    amount:Math.round(orderData?.totalPrice * 100),
+    currency: "INR",
+    name: "Knitting Nest",
+    description: "Manual Payment",
+    handler: function (response) {
+      // Payment success - do something here (optional)
+      console.log("Payment ID:", response.razorpay_payment_id);
+      alert("Payment successful! ID: " + response.razorpay_payment_id);
+    },
+    prefill: {
+      name: user?.name || "",
+      email: user?.email || "",
+    },
+    theme: {
+      color: "#f63b60",
+    },
+  };
+
+  const razorpay = new window.Razorpay(options);
+  razorpay.open();
+    } catch (error) {
+        console.error("Payment Error:", error);
+        toast.error("Something went wrong with payment.");
+    }
     };
+
     
 
     // Pay-pal
@@ -76,7 +59,7 @@ const Payment = () => {
                     {
                         description: "Sunflower",
                         amount: {
-                            currency_code: "INR",
+                            currency_code: "USD",
                             value: orderData?.totalPrice,
                         },
                     },
@@ -198,6 +181,7 @@ const Payment = () => {
                         onApprove={onApprove}
                         createOrder={createOrder}
                         cashOnDeliveryHandler={cashOnDeliveryHandler}
+                        paymentHandler={paymentHandler}
 
                     />
                 </div>
@@ -227,24 +211,33 @@ const PaymentInfo = ({
     return (
         <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
             {/* select buttons */}
-            <div>
-                <div className="flex w-full pb-5 border-b mb-2">
-                    <div
-                        className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-                        onClick={() => setSelect(1)}
-                    >
-                        {select === 1 ? (
-                            <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
-                        ) : null}
-                    </div>
-                    <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-                        Pay with Debit/credit card
-                    </h4>
+            <div className="flex w-full pb-5 border-b mb-2">
+                <div
+                    className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center cursor-pointer"
+                    onClick={() => setSelect(1)}
+                >
+                    {select === 1 && (
+                    <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
+                    )}
+                </div>
+                <h4
+                    className="text-[18px] pl-2 font-[600] text-[#000000b1] cursor-pointer"
+                    onClick={() => setSelect(1)}
+                >
+                    Pay with Debit/credit card
+                </h4>
                 </div>
 
-                {/* pay with card */}
-
-            </div>
+                {select === 1 && (
+                <div className="w-full flex border-b pb-5 mb-2">
+                    <div
+                    className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+                    onClick={paymentHandler}
+                    >
+                    Pay Now
+                    </div>
+                </div>
+                )}
 
             <br />
             {/* paypal payment */}
@@ -287,6 +280,7 @@ const PaymentInfo = ({
                                             options={{
                                                 "client-id":
                                                     "AXRhO4eNGo3L8MUFazEFnW9hNwBP2rTwUWNqMMRcFtjpbCrDVt6vS8HoWa7hyLlfO0fxG3OU_9zit7KN",
+                                                    currency: "USD",
                                             }}
                                         >
                                             <PayPalButtons
@@ -334,6 +328,16 @@ const PaymentInfo = ({
                         </form>
                     </div>
                 ) : null}
+                {select === 4 && (
+                    <div className="w-full flex">
+                        <div
+                        className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+                        onClick={paymentHandler} // Make sure this prop is passed from the parent
+                        >
+                        Pay Now
+                        </div>
+                    </div>
+                    )}
             </div>
 
         </div>
